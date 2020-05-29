@@ -103,37 +103,36 @@ static Account_LoadData(playerid) {
 static 
     Player_Attempts[MAX_PLAYERS];
 
- forward OnPasswordVerify(playerid, bool:success);
- public OnPasswordVerify(playerid, bool:success) {
-
+forward OnPasswordVerify(playerid, bool:success);
+public OnPasswordVerify(playerid, bool:success) {
     if(!success) {
-        SendErrorMsgF(playerid, "Wrong password, try again! - Attempts: [%i/%i]", Player_Attempts, MAX_PASSWORD_ATTEMPT);
-        Account_PromptLogin(playerid, gPlayerHash[playerid]);
+    SendErrorMsgF(playerid, "Wrong password, try again! - Attempts: [%i/%i]", Player_Attempts, MAX_PASSWORD_ATTEMPT);
+    Account_PromptLogin(playerid, gPlayerHash[playerid]);
 
-        if(Player_Attempts[playerid] >= MAX_PASSWORD_ATTEMPT) {
-            SendErrorMsg(playerid, "You have been kicked from the server for attempting to login numerous times.");
-            Kick(playerid);
+    if(Player_Attempts[playerid] >= MAX_PASSWORD_ATTEMPT) {
+        SendErrorMsg(playerid, "You have been kicked from the server for attempting to login numerous times.");
+        Kick(playerid);
 
-            dbg("player", "player has been kicked for too many login attempts", 
-                _p("username", playerid), 
-                _i("uid", Player_GetAccountID(playerid)) 
-            );
-            return;
-        }
-
-        dbg("player", "player failed to login",
-            _i("attemps", Player_Attempts[playerid]),
-            _p("username", playerid),
-            _i("uid", Player_GetAccountID(playerid))
-		);
-
-        Player_Attempts[playerid] ++;
+        dbg("player", "player has been kicked for too many login attempts", 
+            _p("username", playerid), 
+            _i("uid", Player_GetAccountID(playerid)) 
+        );
         return;
+    }
+
+    dbg("player", "player failed to login",
+        _i("attemps", Player_Attempts[playerid]),
+        _p("username", playerid),
+        _i("uid", Player_GetAccountID(playerid))
+    );
+
+    Player_Attempts[playerid] ++;
+    return;
     }
 
     Account_LoadData(playerid);
     Player_Attempts[playerid] = 0;
- }
+}
 
  // API
 Player_IsLoggedIn(playerid) {
